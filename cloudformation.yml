@@ -1,0 +1,26 @@
+Description: Hello world service
+Parameters:
+  GitHubConnectionArn:
+    Type: String
+    Description: App Runner GitHub connection ARN
+Resources:
+  Service:
+    Type: AWS::AppRunner::Service
+    Properties:
+      ServiceName: hello-world
+      SourceConfiguration:
+        AuthenticationConfiguration:
+          ConnectionArn: !Ref GitHubConnectionArn
+        AutoDeploymentsEnabled: false
+        CodeRepository:
+          RepositoryUrl: 'https://github.com/artyom/app-runner-hello-world'
+          SourceCodeVersion:
+            Type: 'BRANCH'
+            Value: 'main'
+          CodeConfiguration:
+            ConfigurationSource: 'API'
+            CodeConfigurationValues:
+              Runtime: 'PYTHON_3'
+              BuildCommand: pip install -r requirements.txt
+              StartCommand: python server.py
+              Port: '8080'
